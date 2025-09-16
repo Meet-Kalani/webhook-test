@@ -7,7 +7,7 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   console.log("in /");
-  res.send("✅ Webhook server is running");
+  res.status(200).send("✅ Webhook server is running");
 });
 
 app.post("/webhook", (req, res) => {
