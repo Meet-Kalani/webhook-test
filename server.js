@@ -6,13 +6,13 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  console.log("in the get");
-  res.send("Hello World!");
+  console.log("in /");
+  res.send("Hello from webhook server!");
 });
 
 app.post("/webhook", (req, res) => {
+  console.log("in /webhook");
   const event = req.headers["x-gitlab-event"];
-  console.log("in the webhook");
   if (event === "Push Hook") {
     console.log("🚀 Push detected, running release script...");
     exec("npm run release:patch", (err, stdout, stderr) => {
@@ -26,4 +26,8 @@ app.post("/webhook", (req, res) => {
   res.status(200).send("OK");
 });
 
-app.listen(4000, "0.0.0.0", () => console.log("Webhook server running on port 4000"));
+// Render gives port via env variable
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`🚀 Webhook server running on port ${PORT}`);
+});
