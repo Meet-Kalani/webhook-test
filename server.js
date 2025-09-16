@@ -1,17 +1,17 @@
 // server.js
 const express = require("express");
 const { exec } = require("child_process");
-const http = require("http");
 
 const app = express();
 app.use(express.json());
 
-// Health check route
 app.get("/", (req, res) => {
-  res.status(200).send("✅ Webhook server is running");
+  console.log("in /");
+  res.send("✅ Webhook server is running");
 });
 
 app.post("/webhook", (req, res) => {
+  console.log("in /webhook");
   const event = req.headers["x-gitlab-event"];
   if (event === "Push Hook") {
     console.log("🚀 Push detected, running release script...");
@@ -26,14 +26,8 @@ app.post("/webhook", (req, res) => {
   res.status(200).send("OK");
 });
 
-// Render requirement: bind to 0.0.0.0 and use process.env.PORT
+// Render gives port via env variable
 const PORT = process.env.PORT || 4000;
-const server = http.createServer(app);
-
-// Increase timeouts for Render (avoid 502 / timeout errors)
-server.keepAliveTimeout = 120000; // 120s
-server.headersTimeout = 120000;   // 120s
-
-server.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
   console.log(`🚀 Webhook server running on port ${PORT}`);
 });
