@@ -8,7 +8,7 @@ app.use(express.json());
 
 // Health check route
 app.get("/", (req, res) => {
-  res.send("✅ Webhook server is running");
+  res.status(200).send("✅ Webhook server is running");
 });
 
 app.post("/webhook", (req, res) => {
